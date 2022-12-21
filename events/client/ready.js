@@ -15,7 +15,7 @@ module.exports = async (client) => {
     setInterval(async () => {
         const giveaways = await client.db.giveaway.find();
         for (let g of giveaways) {
-            if (Date.now() > g.duration_end * 1000 && g.end === false) {
+            if (Date.now() > g.duration_end && g.end === false) {
                 await client.db.giveaway.updateOne({ message: g.message }, {
                     $set: { "end": true }
                 });
@@ -32,13 +32,17 @@ module.exports = async (client) => {
                             embeds: [
                                 new EmbedBuilder()
                                     .setTitle(g.prize)
-                                    .setDescription(`Ended: <t:${g?.duration_end}:R>\nHosted by: <@${g?.hosted}>\nEntries: **${g?.members.length}**\nWinners: **${winners_array.slice(0, g.winners).join(', ') || "No"}**`).setTimestamp(g?.duration_end * 1000).setColor(client.colors.default)
+                                    .setDescription(`**${g?.description !== null ? g?.description + "**\n\n" : ''}Ended: <t:${Math.round(g?.duration_end / 1000)}:R>\nHosted by: <@${g?.hosted}>\nEntries: **${g?.members.length}**\nWinners: **${winners_array.slice(0, g.winners).join(', ') || "No"}**`).setTimestamp(g?.duration_end).setColor(client.colors.default)
                             ], components: []
                         });
                         if (winners_array.length !== 0) {
                             msg.reply({
                                 content: `Congratulations ${winners_array.slice(0, g.winners).join(', ')}! You won the **${g.prize}**!`
-                            });
+                            }).catch(() => null)
+                        } else {
+                            msg.reply({
+                                content: `❌ No one participated in the giveaway.`
+                            }).catch(() => null)
                         }
                     }, e => {
                         { return; }

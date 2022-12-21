@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema({
+    description: String,
     prize: String,
     duration: Number,
     duration_end: Number,

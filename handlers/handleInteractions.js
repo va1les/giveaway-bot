@@ -1,7 +1,7 @@
 const { readdirSync } = require("node:fs");
 
 function handleInteractions(client) {
-    const interactions = ['commands', 'buttons', 'selectmenues']
+    const interactions = ['commands', 'buttons']
     interactions.forEach((type, index) => {
         readdirSync(`./${type}`).forEach(directory => {
             let interactionFiles = readdirSync(`./${type}/${directory}`).filter(file => file.endsWith('.js'))

@@ -8,7 +8,7 @@ module.exports = {
         // interaction.message.id
         const data = await client.db.giveaway.findOne({ message: interaction.message.id })
         if (data?.members.includes(interaction.user.id)) {
-            const msg = await interaction.reply({ content: `❌ You are already participating in the drawing.`, components: [new ActionRowBuilder().addComponents([new ButtonBuilder().setCustomId('leave').setLabel('Leave Giveaway').setStyle(ButtonStyle.Danger)])], ephemeral: true }).catch(() => null);
+            const msg = await interaction.reply({ content: `❌ You are already participating in the giveaway.`, components: [new ActionRowBuilder().addComponents([new ButtonBuilder().setCustomId('leave').setLabel('Leave Giveaway').setStyle(ButtonStyle.Danger)])], ephemeral: true }).catch(() => null);
             const collector = msg.createMessageComponentCollector();
             setTimeout(() => {
                 interaction.editReply(
@@ -29,7 +29,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setTitle(data?.prize)
-                                    .setDescription(`Ends: <t:${data?.duration_end}:R>\nHosted by: <@${data?.hosted}>\nEntries: **${data?.members.length}**\nWinners: **${data?.winners}**`).setTimestamp(data?.duration_end * 1000).setColor(client.colors.default)
+                                    .setDescription(`**${data?.description !== null ? data?.description + "**\n\n" : ''}Ends: <t:${Math.floor(data?.duration_end / 1000)}:R>\nHosted by: <@${data?.hosted}>\nEntries: **${data?.members.length}**\nWinners: **${data?.winners}**`).setTimestamp(data?.duration_end).setColor(client.colors.default)
                             ], components: [new ActionRowBuilder().addComponents([new ButtonBuilder().setCustomId('giveaway').setStyle(ButtonStyle.Primary).setEmoji('🎉')])]
                         }, err => {
                             return;
@@ -50,7 +50,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setTitle(data?.prize)
-                            .setDescription(`Ends: <t:${data?.duration_end}:R>\nHosted by: <@${data?.hosted}>\nEntries: **${data?.members.length}**\nWinners: **${data?.winners}**`).setTimestamp(data?.duration_end * 1000).setColor(client.colors.default)
+                            .setDescription(`**${data?.description !== null ? data?.description + "**\n\n" : ''}Ends: <t:${Math.floor(data?.duration_end / 1000)}:R>\nHosted by: <@${data?.hosted}>\nEntries: **${data?.members.length}**\nWinners: **${data?.winners}**`).setTimestamp(data?.duration_end).setColor(client.colors.default)
                     ], components: [new ActionRowBuilder().addComponents([new ButtonBuilder().setCustomId('giveaway').setStyle(ButtonStyle.Primary).setEmoji('🎉')])]
                 }, err => {
                     return;
